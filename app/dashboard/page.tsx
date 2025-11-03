@@ -6,6 +6,7 @@ import InvoiceCard from '@/components/InvoiceCard'
 import SuggestionCard from '@/components/SuggestionCard'
 import StatsCard from '@/components/StatsCard'
 import { getInvoices, getPaymentSuggestions, getMonthlyReports } from '@/lib/cosmic'
+import { Invoice, PaymentSuggestion } from '@/types'
 
 export default async function DashboardPage() {
   const invoices = await getInvoices()
@@ -15,10 +16,10 @@ export default async function DashboardPage() {
   const latestReport = reports[0]
   
   // Calculate dashboard stats
-  const pendingInvoices = invoices.filter(inv => inv.metadata.payment_status.key === 'pending')
-  const paidInvoices = invoices.filter(inv => inv.metadata.payment_status.key === 'paid')
-  const totalAmount = invoices.reduce((sum, inv) => sum + (inv.metadata.total_amount || 0), 0)
-  const totalSavings = invoices.reduce((sum, inv) => sum + (inv.metadata.suggested_savings || 0), 0)
+  const pendingInvoices = invoices.filter((inv: Invoice) => inv.metadata.payment_status.key === 'pending')
+  const paidInvoices = invoices.filter((inv: Invoice) => inv.metadata.payment_status.key === 'paid')
+  const totalAmount = invoices.reduce((sum: number, inv: Invoice) => sum + (inv.metadata.total_amount || 0), 0)
+  const totalSavings = invoices.reduce((sum: number, inv: Invoice) => sum + (inv.metadata.suggested_savings || 0), 0)
   
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -77,7 +78,7 @@ export default async function DashboardPage() {
               
               <div className="space-y-4">
                 {invoices.length > 0 ? (
-                  invoices.slice(0, 5).map((invoice) => (
+                  invoices.slice(0, 5).map((invoice: Invoice) => (
                     <InvoiceCard key={invoice.id} invoice={invoice} />
                   ))
                 ) : (
@@ -98,7 +99,7 @@ export default async function DashboardPage() {
               
               <div className="space-y-4">
                 {suggestions.length > 0 ? (
-                  suggestions.map((suggestion) => (
+                  suggestions.map((suggestion: PaymentSuggestion) => (
                     <SuggestionCard key={suggestion.id} suggestion={suggestion} />
                   ))
                 ) : (
